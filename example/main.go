@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/KevinZu/fins"
+	fins "github.com/smtp-http/fins-go"
 )
 
 func main() {
