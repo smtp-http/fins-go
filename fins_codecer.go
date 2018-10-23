@@ -3,12 +3,12 @@ package fins
 import (
 	"errors"
 	"fmt"
-	"github.com/KevinZu/golis"
-	//"time"
+	"github.com/KevinZu/gcbase"
+//"time"
 )
 
 type ProtoCodec struct {
-	golis.ProtocalCodec
+	gcbase.ProtocalCodec
 	//FinsCmdChain *command.CmdChain
 }
 
@@ -47,7 +47,7 @@ func getFrame(bs []byte, dataCh chan<- interface{}) int {
 	return posAdd
 }
 
-func (p *ProtoCodec) Decode(buffer *golis.Buffer, dataCh chan<- interface{}) error {
+func (p *ProtoCodec) Decode(buffer *gcbase.Buffer, dataCh chan<- interface{}) error {
 
 	rdPos := buffer.GetReadPos()
 	rdLen := buffer.GetWritePos() - buffer.GetReadPos()

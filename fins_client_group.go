@@ -3,7 +3,7 @@ package fins
 import (
 	"container/list"
 	"fmt"
-	"github.com/KevinZu/golis"
+	"github.com/KevinZu/gcbase"
 	"sync"
 	"time"
 )
@@ -19,7 +19,7 @@ type ClientAddr struct {
 type ClientGroup struct {
 	Dch chan bool
 	//	ClientAddrs map[string]*ClientAddr
-	Clients map[*ClientInfo]*golis.Iosession
+	Clients map[*ClientInfo]*gcbase.Iosession
 	Timer   *time.Ticker
 }
 
@@ -28,7 +28,7 @@ var clientGroupInstance *ClientGroup
 func GetClientGroup() *ClientGroup {
 	clientGroupOnce.Do(func() {
 		clientGroupInstance = &ClientGroup{}
-		clientGroupInstance.Clients = make(map[*ClientInfo]*golis.Iosession)
+		clientGroupInstance.Clients = make(map[*ClientInfo]*gcbase.Iosession)
 		//	clientGroupInstance.ClientAddrs = make(map[string]*ClientAddr)
 		clientGroupInstance.Dch = make(chan bool)
 		clientGroupInstance.Timer = time.NewTicker(10 * time.Second)
@@ -45,10 +45,10 @@ var (
 )
 
 type ClientInfo struct {
-	Cli         *golis.Client
+	Cli         *gcbase.Client
 	ConnStatus  ConnectStatus
 	conAddr     string
-	Session     *golis.Iosession
+	Session     *gcbase.Iosession
 	LastTryTime int64
 
 	ErrorCount   int32
@@ -85,9 +85,9 @@ func popReq(l *list.List) interface{} {
 	return v
 }
 
-func (cg *ClientGroup) AddNewClient(cli *ClientAddr,error_max int32) (error, *ClientInfo) {
+func (cg *ClientGroup) AddNewClient(cli *ClientAddr, error_max int32) (error, *ClientInfo) {
 	filter := &MsgFilter{}
-	c := golis.NewClient()
+	c := gcbase.NewClient()
 	c.FilterChain().AddLast("clientFilter", filter)
 	codec := &ProtoCodec{}
 
@@ -145,7 +145,7 @@ func (cg *ClientGroup) BuildClients(clients []*ClientAddr, error_max int32) erro
 
 	for _, v := range clients {
 
-		c := golis.NewClient()
+		c := gcbase.NewClient()
 		c.FilterChain().AddLast("clientFilter", filter)
 		codec := &ProtoCodec{}
 

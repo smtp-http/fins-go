@@ -2,15 +2,15 @@ package fins
 
 import (
 	"fmt"
-	"github.com/KevinZu/golis"
+	"github.com/KevinZu/gcbase"
 )
 
 type MsgFilter struct {
-	golis.IoFilterAdapter
+	gcbase.IoFilterAdapter
 	//FinsCmdChain *command.CmdChain
 }
 
-func (*MsgFilter) SessionClosed(session *golis.Iosession) bool {
+func (*MsgFilter) SessionClosed(session *gcbase.Iosession) bool {
 	fmt.Println("session closed")
 	clientGroup := GetClientGroup()
 
@@ -37,14 +37,14 @@ func (*MsgFilter) SessionClosed(session *golis.Iosession) bool {
 	return true
 }
 
-func (*MsgFilter) SessionOpened(session *golis.Iosession) bool {
+func (*MsgFilter) SessionOpened(session *gcbase.Iosession) bool {
 
 	fmt.Println("====== session opened")
 
 	return true
 }
 
-func (m *MsgFilter) MsgReceived(session *golis.Iosession, message interface{}) bool {
+func (m *MsgFilter) MsgReceived(session *gcbase.Iosession, message interface{}) bool {
 	// if bs, ok := message.([]byte); ok {
 	// 	//c := make(chan bool)
 	// 	fmt.Println("received msg :", string(bs))
@@ -69,7 +69,7 @@ func (m *MsgFilter) MsgReceived(session *golis.Iosession, message interface{}) b
 	return true
 }
 
-func (*MsgFilter) MsgSent(session *golis.Iosession, message interface{}) bool {
+func (*MsgFilter) MsgSent(session *gcbase.Iosession, message interface{}) bool {
 	fmt.Println("client msg sent")
 	return true
 }
