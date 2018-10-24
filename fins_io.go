@@ -132,6 +132,14 @@ func (s *FinsSysTp) FinslibTcpConnect(address string, port uint16, local_net uin
 		fmt.Printf("tcp sent error: %v\n", err)
 		return nil, err
 	}
+
+	n, buf, err := session.ReadData()
+	if err != nil {
+		fmt.Println("err: ", err)
+		return nil, err
+	}
+
+	fmt.Println("recv: ", buf, "   n: ", n)
 	/*
 		n, err := session.conn.Read(buffer)
 			ioBuffer.PutBytes(buffer[:n])
