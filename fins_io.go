@@ -90,6 +90,8 @@ func (s *FinsSysTp) FinslibTcpConnect(address string, port uint16, local_net uin
 
 	cliAddr := &ClientAddr{}
 	//go s.Dial("tcp", addrInfo)
+	cliAddr.Ip = string(addr)
+	cliAddr.Port = uint(port)
 	cliGroup := GetClientGroup()
 	err, cliInfo := cliGroup.AddNewClient(cliAddr, error_max)
 	if err != nil {
@@ -129,13 +131,13 @@ func (s *FinsSysTp) FinslibTcpConnect(address string, port uint16, local_net uin
 		fmt.Printf("tcp sent error: %v\n", err)
 		return nil, err
 	}
-/*
-	n, err := session.conn.Read(buffer)
-		ioBuffer.PutBytes(buffer[:n])
-		if err != nil {
-			session.serv.filterChain.errorCaught(session, err)
-			session.Close()
-			return nil,err
-		}*/
+	/*
+		n, err := session.conn.Read(buffer)
+			ioBuffer.PutBytes(buffer[:n])
+			if err != nil {
+				session.serv.filterChain.errorCaught(session, err)
+				session.Close()
+				return nil,err
+			}*/
 	return cliInfo, nil
 }
