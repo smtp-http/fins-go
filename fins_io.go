@@ -126,6 +126,7 @@ func (s *FinsSysTp) FinslibTcpConnect(address string, port uint16, local_net uin
 	frame[19] = s.LocalNode /* Get node number automatically	*/
 
 	session := cliInfo.Session
+	fmt.Printf("session: %v\n", cliInfo.Session)
 	err = session.Write(frame)
 	if err != nil {
 		fmt.Printf("tcp sent error: %v\n", err)

@@ -114,6 +114,7 @@ func (cg *ClientGroup) AddNewClient(cli *ClientAddr, error_max int32) (error, *C
 		cliInfo.ConnStatus = CONNECT
 		fmt.Printf("*** %p\n", c.Session) //
 		c.Session.SetExtraData("connectAddr", connectAddr)
+		cliInfo.Session = c.Session
 		cg.Clients[&cliInfo] = c.Session
 	}
 
