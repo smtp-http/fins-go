@@ -32,7 +32,7 @@ func GetClientGroup() *ClientGroup {
 		//	clientGroupInstance.ClientAddrs = make(map[string]*ClientAddr)
 		clientGroupInstance.Dch = make(chan bool)
 		clientGroupInstance.Timer = time.NewTicker(10 * time.Second)
-		go clientGroupInstance.TimerHandle(clientGroupInstance.Timer)
+		//go clientGroupInstance.TimerHandle(clientGroupInstance.Timer)
 	})
 	return clientGroupInstance
 }
@@ -112,7 +112,7 @@ func (cg *ClientGroup) AddNewClient(cli *ClientAddr, error_max int32) (error, *C
 
 	} else {
 		cliInfo.ConnStatus = CONNECT
-		fmt.Printf("*** %p\n", c.Session) //
+		fmt.Printf("*** %p\n", c.Session)
 		c.Session.SetExtraData("connectAddr", connectAddr)
 		cliInfo.Session = c.Session
 		cg.Clients[&cliInfo] = c.Session

@@ -561,6 +561,9 @@ type FinsSysTp struct {
 	RemoteNode uint8
 	RemoteUnit uint8
 
+	lasterror   int
+	errorchange bool
+
 	Sid      uint8
 	CommType uint8
 	Model    []byte

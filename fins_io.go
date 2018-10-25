@@ -148,5 +148,86 @@ func (s *FinsSysTp) FinslibTcpConnect(address string, port uint16, local_net uin
 				session.Close()
 				return nil,err
 			}*/
+	var command uint32
+	command = uint32(buf[8])*256*256*256 + uint32(buf[9])*256*256 + uint32(buf[10])*256 + uint32(buf[11])
+	fmt.Println("command: ", command)
+
+	var errorcode uint32
+	errorcode = uint32(buf[12])*256*256*256 + uint32(buf[13])*256*256 + uint32(buf[14])*256 + uint32(buf[15])
+	fmt.Println("errorcode: ", errorcode)
+
+	/*
+		if ( command != 0x00000001 ) {
+
+			new_error          = tcp_errorcode_to_fins_retval( errorcode );
+			sys->error_changed = ( new_error != sys->last_error );
+			sys->last_error    = new_error;
+
+			if ( error_val != NULL ) *error_val = sys->last_error;
+
+			return fins_close_socket( sys );
+		}
+
+	*/
+
+	if command != 0x00000001 {
+
+		new_error := TcpErrorcodeToFinsRetval(errorcode)
+		s.errorchange = (new_error != s.lasterror)
+		s.lasterror = new_error
+
+		if err != nil {
+			errstr := fmt.Sprint("errcode:%v", s.lasterror)
+			err = errors.New(errstr) //s.lasterror
+		}
+
+		if s.SocketFd != INVALID_SOCKET {
+
+			session.Close()
+		}
+		FinsReset(s)
+	}
+
 	return cliInfo, nil
+}
+
+func TcpErrorcodeToFinsRetval(errorcode uint32) int {
+
+	switch errorcode {
+
+	case 0x00000000:
+		return FINS_RETVAL_CLOSED_BY_REMOTE
+	case 0x00000001:
+		return FINS_RETVAL_NO_FINS_HEADER
+	case 0x00000002:
+		return FINS_RETVAL_DATA_LENGTH_TOO_LONG
+	case 0x00000003:
+		return FINS_RETVAL_COMMAND_NOT_SUPPORTED
+	case 0x00000020:
+		return FINS_RETVAL_ALL_CONNECTIONS_IN_USE
+	case 0x00000021:
+		return FINS_RETVAL_NODE_ALREADY_CONNECTED
+	case 0x00000022:
+		return FINS_RETVAL_NODE_IP_PROTECTED
+	case 0x00000023:
+		return FINS_RETVAL_CLIENT_NODE_OUT_OF_RANGE
+	case 0x00000024:
+		return FINS_RETVAL_SAME_NODE_ADDRESS
+	case 0x00000025:
+		return FINS_RETVAL_NO_NODE_ADDRESS_AVAILABLE
+	}
+
+	return FINS_RETVAL_ILLEGAL_FINS_COMMAND
+}
+
+func FinsReset(sys *FinsSysTp) {
+
+	if sys == nil {
+		return
+	}
+
+	sys.SocketFd = INVALID_SOCKET
+	sys.Timeout = time.Now().Unix()
+
+	return
 }
