@@ -1,5 +1,9 @@
 package fins
 
+import (
+	"github.com/KevinZu/gcbase"
+)
+
 const (
 	FINS_ICF = 0  /* Information Control Field				*/
 	FINS_RSV = 1  /* Reserved						*/
@@ -55,7 +59,9 @@ const (
 	FINS_CPU_MODE_MONITOR = 2 /* The CPU is in monitor mode				*/
 	FINS_CPU_MODE_RUN     = 4 /* The CPU is in run mode				*/
 )
-
+const (
+	BUFLEN = 1024
+)
 const (
 	FI_RD   = 0x01
 	FI_WR   = 0x02
@@ -356,27 +362,6 @@ type fins_area_tp struct { /*							*/
 	force     bool   /* Force status used 					*/
 } /*							*/
 /********************************************************/
-type fins_sys_tp struct {
-	address string
-	port    uint16
-	sockfd  int32
-	//time_t		timeout
-	error_count   int32
-	error_max     int32
-	last_error    int32
-	error_changed bool
-	local_net     uint8
-	local_node    uint8
-	local_unit    uint8
-	remote_net    uint8
-	remote_node   uint8
-	remote_unit   uint8
-	sid           uint8
-	comm_type     uint8
-	model         string
-	version       string
-	plc_mode      int32
-}
 
 type fins_datetime_tp struct {
 	year  int32
@@ -516,7 +501,7 @@ type fins_fileinfo_tp struct {
 }
 
 type fins_address_tp struct {
-	name         string
+	name         []byte
 	main_address uint32
 	sub_address  uint32
 }
@@ -551,6 +536,7 @@ type fins_multidata_tp struct {
 }
 
 type FinsSysTp struct {
+	Session    *gcbase.Iosession
 	Address    []byte
 	Port       uint16
 	SocketFd   int32
@@ -563,6 +549,8 @@ type FinsSysTp struct {
 
 	lasterror   int
 	errorchange bool
+	errorCount  int
+	errorMax    int
 
 	Sid      uint8
 	CommType uint8
@@ -573,4 +561,9 @@ type FinsSysTp struct {
 	Timeout int64
 
 	CliGroup *ClientGroup
+}
+
+type fins_command_tp struct {
+	header [FINS_HEADER_LEN]uint8
+	body   [FINS_BODY_LEN]uint8
 }

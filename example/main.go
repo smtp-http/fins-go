@@ -17,6 +17,13 @@ func main() {
 		fmt.Printf("FinslibTcpConnect error ! error_val:%d\n", error_val)
 	}
 
+	sys.PlcMode = fins.FINS_MODE_CS
+	rddata := make([]byte, 10)
+	start := "DM100"
+
+	ret := sys.FinslibMemoryAreaReadWord(start, rddata, 1)
+
+	fmt.Printf("ret:%v\n", ret)
 	wg.Wait()
 
 	sys.CliGroup.DelClient(cliInfo)
